@@ -19,6 +19,20 @@ server.post("/api/blocks", (req, res) => {
     return;
   }
 
+  // Check for unknown field or invalid field
+  for (let bodyKey of bodyKeys) {
+    if (!requiredValues.includes(bodyKey)) {
+      res.status(400).json({ errorMessage: `unknown field ${bodyKey}` });
+      return;
+    }
+    if (bodyKey === "id") {
+      res
+        .status(400)
+        .json({ errorMessage: `field 'id' should not be defined` });
+      return;
+    }
+  }
+
   if (model.blocks.findIndex((block) => block.name === req.body.name) !== -1) {
     res.status(400).json({ errorMessage: "duplicate name" });
     return;

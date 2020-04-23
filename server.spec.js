@@ -26,7 +26,25 @@ describe("server", () => {
       expect(response.status).toEqual(400);
     });
 
-    it.todo("should return 400 error if an invalid field is included");
+    it("should return 400 error if an unknown field is included", async () => {
+      const response = await request(server).post("/api/blocks").send({
+        name: "stone",
+        color: "grey",
+        solid: true,
+        nonexistantField: true,
+      });
+      expect(response.status).toEqual(400);
+    });
+
+    it("should return 400 error if id field is included", async () => {
+      const response = await request(server).post("/api/blocks").send({
+        id: 1337,
+        name: "stone",
+        color: "grey",
+        solid: true,
+      });
+      expect(response.status).toEqual(400);
+    });
 
     const newblock = { name: "stone", color: "grey", solid: true };
 
