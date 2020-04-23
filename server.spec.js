@@ -62,7 +62,19 @@ describe("server", () => {
       expect(response.body.id).toBeTruthy();
     });
 
-    it.todo("should add the block to the list of all blocks");
+    it("should add the block to the list of all blocks", async () => {
+      const pre_existing_blocks = model.blocks.filter(
+        (block) => block.name === newblock.name
+      );
+      expect(pre_existing_blocks).toHaveLength(0);
+
+      const response = await request(server).post("/api/blocks").send(newblock);
+
+      const matching_blocks = model.blocks.filter(
+        (block) => block.name === newblock.name
+      );
+      expect(matching_blocks).toHaveLength(1);
+    });
 
     it("should reject duplicate block names", async () => {
       model.blocks = [newblock];
