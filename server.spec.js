@@ -15,7 +15,14 @@ describe("server", () => {
   describe("POST /api/blocks", () => {
     it.todo("should return 400 error if a required field is missing");
     it.todo("should return 400 error if an invalid field is included");
-    it.todo("should return a status code of 201");
+
+    const newblock = { name: "stone", color: "grey", solid: true };
+
+    it("should return a status code of 201", async () => {
+      const response = await request(server).post("/api/blocks").send();
+      expect(response.status).toEqual(201);
+    });
+
     it.todo("should return the newly created block");
     it.todo("should add the block to the list of all blocks");
     it.todo("should reject duplicate block names");
