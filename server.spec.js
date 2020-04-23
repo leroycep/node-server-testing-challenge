@@ -13,7 +13,12 @@ describe("server", () => {
       expect(response.body).toBeInstanceOf(Array);
     });
   });
+
   describe("POST /api/blocks", () => {
+    beforeEach(() => {
+      model.blocks = [];
+    });
+
     it("should return 400 error if a required field is missing", async () => {
       const response = await request(server)
         .post("/api/blocks")
@@ -40,8 +45,16 @@ describe("server", () => {
     });
 
     it.todo("should add the block to the list of all blocks");
-    it.todo("should reject duplicate block names");
+
+    it("should reject duplicate block names", async () => {
+      model.blocks = [newblock];
+
+      const response = await request(server).post("/api/blocks").send(newblock);
+
+      expect(response.status).toEqual(400);
+    });
   });
+
   describe("PUT /api/blocks/:id", () => {
     it.todo("should return 400 error if a required field is missing");
     it.todo("should return 400 error if an invalid field is included");

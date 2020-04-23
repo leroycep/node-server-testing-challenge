@@ -19,6 +19,11 @@ server.post("/api/blocks", (req, res) => {
     return;
   }
 
+  if (model.blocks.findIndex((block) => block.name === req.body.name) !== -1) {
+    res.status(400).json({ errorMessage: "duplicate name" });
+    return;
+  }
+
   const block = {
     ...req.body,
     id: model.nextId,
