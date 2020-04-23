@@ -12,6 +12,15 @@ server.get("/api/blocks", (req, res) => {
 });
 
 server.post("/api/blocks", (req, res) => {
+  const requiredValues = ["name", "color", "solid"];
+  const bodyKeys = Object.keys(req.body);
+  if (!requiredValues.every((val) => bodyKeys.includes(val))) {
+    res
+      .status(400)
+      .json({ errorMessage: "'name', 'color', and 'solid' must be defined" });
+    return;
+  }
+
   const block = {
     ...req.body,
     id: nextId,

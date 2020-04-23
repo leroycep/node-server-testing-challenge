@@ -13,13 +13,18 @@ describe("server", () => {
     });
   });
   describe("POST /api/blocks", () => {
-    it.todo("should return 400 error if a required field is missing");
+    it("should return 400 error if a required field is missing", async () => {
+      const response = await request(server)
+        .post("/api/blocks")
+        .send({ name: undefined, color: "grey", solid: true });
+      expect(response.status).toEqual(400);
+    });
     it.todo("should return 400 error if an invalid field is included");
 
     const newblock = { name: "stone", color: "grey", solid: true };
 
     it("should return a status code of 201", async () => {
-      const response = await request(server).post("/api/blocks").send();
+      const response = await request(server).post("/api/blocks").send(newblock);
       expect(response.status).toEqual(201);
     });
 
