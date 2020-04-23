@@ -5,14 +5,20 @@ const server = express();
 server.use(express.json());
 
 let blocks = [];
+let nextId = 1;
 
 server.get("/api/blocks", (req, res) => {
   res.status(200).json(blocks);
 });
 
 server.post("/api/blocks", (req, res) => {
-  blocks.push(req.body);
-  res.status(201).json(req.body);
+  const block = {
+    ...req.body,
+    id: nextId,
+  };
+  nextId += 1;
+  blocks.push(block);
+  res.status(201).json(block);
 });
 
 module.exports = server;

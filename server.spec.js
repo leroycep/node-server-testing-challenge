@@ -23,7 +23,15 @@ describe("server", () => {
       expect(response.status).toEqual(201);
     });
 
-    it.todo("should return the newly created block");
+    it("should return the newly created block", async () => {
+      const response = await request(server).post("/api/blocks").send(newblock);
+
+      expect(response.body.name).toEqual(newblock.name);
+      expect(response.body.color).toEqual(newblock.color);
+      expect(response.body.solid).toEqual(newblock.solid);
+      expect(response.body.id).toBeTruthy();
+    });
+
     it.todo("should add the block to the list of all blocks");
     it.todo("should reject duplicate block names");
   });
