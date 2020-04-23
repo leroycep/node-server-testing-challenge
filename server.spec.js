@@ -1,5 +1,6 @@
 const request = require("supertest");
 const server = require("./server.js");
+const model = require("./model.js");
 
 describe("server", () => {
   describe("GET /api/blocks", () => {
@@ -19,6 +20,7 @@ describe("server", () => {
         .send({ name: undefined, color: "grey", solid: true });
       expect(response.status).toEqual(400);
     });
+
     it.todo("should return 400 error if an invalid field is included");
 
     const newblock = { name: "stone", color: "grey", solid: true };
@@ -48,9 +50,36 @@ describe("server", () => {
     it.todo("should return the updated block");
     it.todo("should reject duplicate block names");
   });
+
   describe("DELETE /api/blocks/:id", () => {
-    it.todo("should return 404 error if specified block does not exist");
-    it.todo("should return a status code of 200");
-    it.todo("should return the deleted block");
+    const diamondBlock = {
+      id: 10,
+      name: "diamond block",
+      color: "blue",
+      solid: true,
+    };
+
+    beforeEach(() => {
+      model.blocks = [diamondBlock];
+    });
+
+    it("should return 404 error if specified block does not exist", async () => {
+      const response = await request(server).delete("/api/blocks/5");
+      expect(response.status).toEqual(404);
+    });
+
+    it("should return a status code of 200", async () => {
+      const response = await request(server).delete(
+        `/api/blocks/${diamondBlock.id}`
+      );
+      expect(response.status).toEqual(200);
+    });
+
+    it("should return the deleted block", async () => {
+      const response = await request(server).delete(
+        `/api/blocks/${diamondBlock.id}`
+      );
+      expect(response.body).toEqual(diamondBlock);
+    });
   });
 });

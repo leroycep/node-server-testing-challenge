@@ -1,14 +1,12 @@
 const express = require("express");
 
+const model = require("./model.js");
 const server = express();
 
 server.use(express.json());
 
-let blocks = [];
-let nextId = 1;
-
 server.get("/api/blocks", (req, res) => {
-  res.status(200).json(blocks);
+  res.status(200).json(model.blocks);
 });
 
 server.post("/api/blocks", (req, res) => {
@@ -23,11 +21,23 @@ server.post("/api/blocks", (req, res) => {
 
   const block = {
     ...req.body,
-    id: nextId,
+    id: model.nextId,
   };
-  nextId += 1;
-  blocks.push(block);
+  model.nextId += 1;
+  model.blocks.push(block);
   res.status(201).json(block);
+});
+
+server.delete("/api/blocks/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const blockIdx = model.blocks.findIndex((block) => block.id === id);
+  if (blockIdx === -1) {
+    res.status(404).json({ errorMessage: "specified block not found" });
+    return;
+  }
+
+  const blocks = model.blocks.splice(blockIdx, 1);
+  res.status(200).json(blocks[0]);
 });
 
 module.exports = server;
